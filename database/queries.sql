@@ -1,0 +1,1 @@
+SELECT * FROM apps WHERE category = 'browser' ORDER BY name
