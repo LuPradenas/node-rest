@@ -113,13 +113,12 @@ const login = (request, response) => {
     const query = "SELECT * FROM users WHERE email = $1 AND password = $2"
     pool.query(query, [email, password], (error, results) => {
         if (error) {
-            response.status(400).json(error);
-          throw error;
+          return  response.status(400).json(error);
         } else if (results.rows.length == 0){
-          response.status(404).json("wrong user or password, try again or sign in a new account")
+          return  response.status(404).json("wrong user or password, try again or sign in a new account")
         }
         const token = auth.generateAccessToken({ username: request.body.username });
-        response.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000})
+        response.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 100000})
         response.status(200).json(results.rows);
       });
 }
@@ -153,7 +152,7 @@ const signIn = (request, response) => {
           throw error;
         }
         const token = auth.generateAccessToken({ username: request.body.username });
-        response.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000})
+        response.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 100000})
         response.status(201).json('user created sucessfully, redirected to login');
       }
     );
